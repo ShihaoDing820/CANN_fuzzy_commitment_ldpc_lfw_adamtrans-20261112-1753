@@ -49,6 +49,22 @@ Host 端负责 CSV 解析、helper data 构造、SHA-256 标签验证和独立�
 ./run-tests.sh
 ```
 
+运行原有的 10 对快速回归测试：
+
+```bash
+./run-tests.sh
+```
+
+运行全部 6000 对 LFW 数据：
+
+```bash
+./run-all.sh
+```
+
+`run-all.sh` 使用新增的 `fuzzy_commitment_lfw_full.asc`，以 20 个 CANN worker
+处理 12000 个 ArcFace 模板和 18000 个 LDPC 块，并输出 TP、TN、FP、FN、
+GMR、FMR、FNMR 和运行时间。原来的 10 对测试源码和入口保持不变。
+
 自定义文件位置：
 
 ```bash
@@ -78,6 +94,19 @@ CANN_ACTIVATE_SCRIPT=/path/to/cann/set_env.sh \
 ```
 
 分类正确率只作为观察值，不作为程序“能否跑通”的退出条件；CANN 与 Host 参考实现不一致才会使测试失败。
+
+## 全量 6000 对结果
+
+本虚拟机 CANN CPU 仿真实测：
+
+```text
+[FULL_RESULT] TP=2989 TN=2837 FP=163 FN=11
+[FULL_RESULT] accuracy=0.971000 GMR=0.996333 FMR=0.054333 FNMR=0.003667
+[FULL_RESULT] valid_pipeline_pairs=6000/6000
+[PASS] Full 6000-pair fuzzy commitment CANN evaluation completed.
+```
+
+这里的 FMR 较高，说明当前固定掩码与阈值只是“可运行配置”，不能作为生产安全参数。
 
 ## 参数
 
